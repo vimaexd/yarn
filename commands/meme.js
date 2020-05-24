@@ -14,7 +14,7 @@ module.exports.run = async (client, message, args) => {
 
             message.channel.send({embed: memeEmbed})
         })
-        .catch(message.channel.send(":warning: Oops! An error happened."))
+        .catch(err => console.log(err))
     message.channel.stopTyping()
 }
 
