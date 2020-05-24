@@ -8,6 +8,7 @@
   "private": false,
   "dependencies": {
     "@blad3mak3r/reddit-memes": "^0.2.2",
+    "booru": "^2.2.3",
     "dabi-images": "^2.7.5",
     "discord.js": "^11.5.1",
     "dotenv": "^8.2.0",

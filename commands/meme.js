@@ -14,11 +14,12 @@ module.exports.run = async (client, message, args) => {
 
             message.channel.send({embed: memeEmbed})
         })
-        .catch(":warning: Oops! An error happened.")
+        .catch(message.channel.send(":warning: Oops! An error happened."))
     message.channel.stopTyping()
 }
 
 module.exports.help = {
     name: "meme",
-    category: "fun"
+    category: "fun",
+    description: "Displays a meme from a meme subreddit."
 }

@@ -84,6 +84,14 @@ body-parser@1.19.0:
     raw-body "2.4.0"
     type-is "~1.6.17"
 
+booru@^2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/booru/-/booru-2.2.3.tgz#cfdc267ebe9e05c14411528b8e0cc30652508531"
+  integrity sha512-K3LO91YQOJyyJpdmib6AedKePTgTt1WrlKkhuRGqkD/PS3yrUgIjpRUJSJJch441V86Gu2F0SAgv0jTQT4zihA==
+  dependencies:
+    fast-xml-parser "^3.16.0"
+    node-fetch "^2.6.0"
+
 brace-expansion@^1.1.7:
   version "1.1.11"
   resolved "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-1.1.11.tgz#3c7fcbf529d87226f3d2f52b966ff5271eb441dd"
@@ -335,6 +343,11 @@ express@^4.17.1:
     type-is "~1.6.18"
     utils-merge "1.0.1"
     vary "~1.1.2"
+
+fast-xml-parser@^3.16.0:
+  version "3.17.2"
+  resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-3.17.2.tgz#e45f482f6ac1e571e5426d710347de1aaf75d54c"
+  integrity sha512-VQPXIE/jEc+GDVdQizAkRcGUcYdvMbGAiSqYBxIdCLSUtwzULnBwjs1wN2j+gEB4TcZM6wKQsX2DIC1njv6+ZA==
 
 finalhandler@~1.1.2:
   version "1.1.2"
