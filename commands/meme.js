@@ -21,5 +21,6 @@ module.exports.run = async (client, message, args) => {
 module.exports.help = {
     name: "meme",
     category: "fun",
-    description: "Displays a meme from a meme subreddit."
+    description: "Displays a meme from a meme subreddit.",
+    usage: "+meme"
 }

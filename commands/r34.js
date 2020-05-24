@@ -3,7 +3,7 @@ const Discord = require("discord.js");
 
 module.exports.run = async (client, message, args) => {
     if(!message.channel.nsfw) return message.channel.send(":x: You can only use this command in an NSFW channel.")
-    if(!args) return message.channel.send(":warning: You need to provide a search tag - +r34 [tag]")
+    if(!args[0]) return message.channel.send(":warning: You need to provide a search tag - +r34 [tag]")
     
     let tagarray = [];
     tagarray.push("-lolita", "-shota");
@@ -47,5 +47,6 @@ module.exports.run = async (client, message, args) => {
 module.exports.help = {
     name: "r34",
     category: "nsfw",
-    description: "Displays a random hentai image."
+    description: "Displays a specified hentai image from Rule34. No parameters will display a random image.",
+    usage: "+r34 [search]"
 }

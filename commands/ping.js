@@ -7,5 +7,6 @@ module.exports.run = async (client, message, args,) => {
 module.exports.help = {
   name: "ping",
   category: "util",
-  description: "Displays the latency between your message and the bot."
+  description: "Displays the latency between your message and the bot.",
+  usage: "+ping"
 }

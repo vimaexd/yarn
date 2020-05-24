@@ -42,5 +42,6 @@ module.exports.run = async (client, message, args) => {
 module.exports.help = {
     name: "huniepop",
     category: "nsfw",
-    description: "Displays a random huniepop image from rule34."
+    description: "Displays a random huniepop image from rule34.",
+    usage: "+huniepop"
 }
