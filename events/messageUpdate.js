@@ -1,7 +1,5 @@
-const conf = require("../config/conf.json")
-
 module.exports = (client, oldMessage, newMessage) => {
-    if (oldMessage.createdTimestamp < oldMessage.createdTimestamp + 30 && newMessage.content.startsWith(conf.prefix)) {
+    if (oldMessage.createdTimestamp < oldMessage.createdTimestamp + 30 && newMessage.content.startsWith(client.prefix)) {
         let message = newMessage;
 
         if(message.author.bot) return;

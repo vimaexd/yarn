@@ -15,7 +15,8 @@
     "express": "^4.17.1",
     "gradient-string": "^1.2.0",
     "musakui": "^1.0.0",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.0",
+    "node-osu": "^2.2.0"
   },
   "scripts": {
     "startprod": "node index",

@@ -1,5 +1,8 @@
 {
-    "prefix": "+",
+    "prefix": {
+        "prod": "+",
+        "dev": "="
+    },
     "presences": [
         "with the hair dye.",
         "HuniePo- wait.."

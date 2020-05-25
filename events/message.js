@@ -5,7 +5,7 @@ module.exports = (client, message) => {
         if(!message.guild) return;
       
         if (message.isMentioned(client.user)) {
-          message.reply(`Hi! You can use +help to view help.`);
+          message.reply(`Hi! You can use ${client.prefix}help to view help.`);
         }
       
         let messageArray = message.content.split(" ");

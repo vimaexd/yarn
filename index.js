@@ -9,7 +9,14 @@ const fs = require("fs");
 require('dotenv').config()
 
 const client = new Discord.Client();
-client.prefix = require("./config/conf.json").prefix
+
+if(process.env.NODE_ENV === "development"){
+	client.prefix = require("./config/conf.json").prefix.dev
+} else if(process.env.NODE_ENV === "production"){
+	client.prefix = require("./config/conf.json").prefix.prod
+}
+
+// client.prefix = require("./config/conf.json").prefix
 
 fs.readdir("./events/", (err, files) => {
 	if (err) return console.error(err);
