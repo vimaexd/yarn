@@ -4,7 +4,9 @@ module.exports.run = async (client, message, args) => {
     if(!message.member.hasPermission("MANAGE_MESSAGES")) return message.channel.send(":x: You don't have permission to use this command.")
     if(!args[0]) return message.channel.send("You need to provide an amount of messages to delete - +purge [amount]")
     if(isNaN(args[0])) return message.channel.send("Invalid amount of messages! - +purge [amount]")
-    message.channel.bulkDelete(args[0]).then(() => {
+
+    let msgamount = parseInt(args[0]) + 1
+    message.channel.bulkDelete(msgamount).then(() => {
       message.channel.send(`:white_check_mark: Deleted ${args[0]} messages`).then(msg => msg.delete(3000))
     })
 }
