@@ -949,6 +949,11 @@ tinygradient@^0.4.1:
     "@types/tinycolor2" "^1.4.0"
     tinycolor2 "^1.0.0"
 
+tnai@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/tnai/-/tnai-1.0.3.tgz#a4d2a2c58c741f2b164e7d834cf2c2942d9a971a"
+  integrity sha512-ZTGd5zVEYdZ+1n0Qv5uRA79gytC46SXWRkm8x+gDhe6Fm3qGq0Maf4SbSchb1MnnPwud0zy3/h0VhaJCP0nzig==
+
 to-readable-stream@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/to-readable-stream/-/to-readable-stream-1.0.0.tgz#ce0aa0c2f3df6adf852efb404a783e77c0475771"

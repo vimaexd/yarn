@@ -1,18 +1,16 @@
-const Discord = require("discord.js")
-const DabiImages = require("dabi-images");
-const DabiClient = new DabiImages.Client();
+const Discord = require("discord.js") 
+const tcli = require("tnai");
+const tnai = new tcli();
 
 module.exports.run = async (client, message, args,) => {
   if(!message.channel.nsfw) return message.channel.send(":x: You can only use this command in an NSFW channel.")
-  DabiClient.nsfw.hentai.ass().then(json => {
-    let embed = new Discord.RichEmbed()
-      .setImage(json.url)
-      .setColor("#34363C")
-    message.channel.send({embed: embed})
-  }).catch(error => {
-      console.log(error);
-      // outputs error
-  });
+
+  let img = await tnai.nsfw.hentai()
+
+  let embed = await new Discord.RichEmbed()
+    .setImage(img)
+    .setColor("#34363C")
+  await message.channel.send({embed: embed})
 }
 
 module.exports.help = {
