@@ -16,7 +16,7 @@
     "gradient-string": "^1.2.0",
     "jimp": "^0.16.1",
     "musakui": "^1.0.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "node-osu": "^2.2.0",
     "tnai": "^1.0.3"
   },
