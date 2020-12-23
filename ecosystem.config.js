@@ -2,7 +2,7 @@ module.exports = {
   apps : [
       {
         name: "nikki",
-        script: "index.js",
+        script: "dist/src/index.js",
         watch: true,
         env: {
           "NODE_ENV": "production",
