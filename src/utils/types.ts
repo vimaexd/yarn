@@ -4,6 +4,8 @@ export interface YarnGlobals {
     prefix?: string;
     config?: YarnConfig;
     env?: string;
+    commands?: Map<string, Command>
+    aliases?: Map<string, string>
 }
 
 export interface YarnCommandObject {
@@ -17,5 +19,6 @@ export interface YarnConfig {
     }
     embedColors: {
         default: string;
-    } 
+    }
+    ownerId: string;
 }

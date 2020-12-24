@@ -6,7 +6,7 @@ const Cmd = new Command({
     name: "ping",
     trigger: ["ping", "pong"],
     description: "Get the latency between the Bot and the Discord API.",
-    category: "tools"
+    category: "Tools"
 }, async (client, message, args, config) => {
     message.channel.send("pong")
 })

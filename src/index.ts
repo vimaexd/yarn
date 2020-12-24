@@ -8,11 +8,12 @@ import Command from "./classes/Command";
 
 dotenv.config()
 const client: Discord.Client = new Discord.Client()
-let commands = new Map;
-let aliases = new Map;
 
 let token: string | undefined;
 let globals: YarnGlobals = {}
+
+globals.commands = new Map;
+globals.aliases = new Map;
 
 globals.config = config
 if(process.env.NODE_ENV === "production"){
@@ -42,9 +43,9 @@ function loadCommands(directory: string): void {
 
             import("./" + path.join(relativePath, moduleName))
                 .then((cmd: YarnCommandObject) => {
-                    commands.set(cmd.default.meta.name, cmd.default)
+                    globals.commands.set(cmd.default.meta.name, cmd.default)
                     cmd.default.meta.trigger.forEach(c => {
-                        aliases.set(c, cmd.default.meta.name)
+                        globals.aliases.set(c, cmd.default.meta.name)
                     })
                     console.log(`⭐ - Loaded command ${f.name}`)
                 })
@@ -72,11 +73,12 @@ client.on('message', (message: Discord.Message) => {
     let args: Array<string> = msg.split(" ").slice(1)
 
     let cmd: Command;
-    aliases.forEach((name: string, a: string) => {
-        if(a == commandName) cmd = commands.get(name)
+    globals.aliases.forEach((name: string, a: string) => {
+        if(a == commandName) cmd = globals.commands.get(name)
     })
 
     if(!cmd) return;
+    if(!cmd.meta.enabled) return;
     cmd.run(client, message, args, globals)
 })
 

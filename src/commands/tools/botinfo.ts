@@ -6,9 +6,8 @@ const Cmd = new Command({
     name: "botinfo",
     trigger: ["botinfo", "aboutme"],
     description: "Find out more about me, the bot!",
-    category: "tools"
+    category: "Tools"
 }, async (client, message, args, globals) => {
-    console.log(globals.config)
     let embed = new MessageEmbed()
         .setTitle("About the bot")
         .setDescription("WIP")
