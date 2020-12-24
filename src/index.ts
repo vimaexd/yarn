@@ -38,12 +38,7 @@ function loadCommands(directory: string): void {
             if(f.isDirectory()) return loadCommands(path.join(__dirname, path.join('commands', f.name)))
             if(!f.name.endsWith(".js") && !f.name.endsWith(".ts")) return;
 
-            let relativePath;
-            if(globals.env === "production"){
-                relativePath = directory.split(path.sep).slice(directory.split(path.sep).indexOf("commands")).join("/")
-            } else {
-                relativePath = directory.split(path.sep).slice(directory.split(path.sep).indexOf("commands")).join("/")
-            }
+            let relativePath = directory.split(path.sep).slice(directory.split(path.sep).indexOf("commands")).join("/")
 
             import("./" + path.join(relativePath, moduleName))
                 .then((cmd: YarnCommandObject) => {
