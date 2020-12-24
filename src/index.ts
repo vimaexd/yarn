@@ -40,7 +40,7 @@ function loadCommands(directory: string): void {
 
             let relativePath;
             if(globals.env === "production"){
-                relativePath = directory.split(path.sep).slice(directory.split(path.sep).indexOf("dist") - 1).join("/")
+                relativePath = directory.split(path.sep).slice(directory.split(path.sep).indexOf("dist")).join("/")
             } else {
                 relativePath = directory.split(path.sep).slice(directory.split(path.sep).indexOf("commands")).join("/")
             }
