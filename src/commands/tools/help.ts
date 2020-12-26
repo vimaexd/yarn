@@ -6,11 +6,13 @@ const Cmd = new Command({
     name: "help",
     trigger: ["help"],
     description: "Get a list of commands that the bot has",
+    usage: "help <command>",
     category: "Tools"
 }, async (client, message, args, globals) => {
     let categories: Array<string> = []
     globals.commands.forEach((v: Command, k: string) => {
         if(v.meta.category == "dev") return;
+        if(v.meta.category == "perserver") return;
         (categories.indexOf(v.meta.category) !== -1) ? void(0) : categories.push(v.meta.category)
     })
 

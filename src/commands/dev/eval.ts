@@ -7,6 +7,7 @@ const Cmd = new Command({
     name: "eval",
     trigger: ["eval"],
     description: "javascript",
+    usage: "None",
     category: "dev"
 }, async (client, message, args, globals) => {
     if(message.author.id !== globals.config.ownerId) return message.channel.send(":x: You do not have permission to use this command.")

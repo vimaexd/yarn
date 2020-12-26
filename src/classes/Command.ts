@@ -6,7 +6,8 @@ interface CommandMeta {
     enabled: boolean,
     trigger: Array<string>,
     description: string,
-    category: string
+    category: string,
+    usage: string
 }
 
 export default class Command {
