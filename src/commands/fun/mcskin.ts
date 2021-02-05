@@ -12,11 +12,19 @@ const Cmd = new Command({
 }, async (client, message, args, globals) => {
     if(!args[0]) return message.channel.send("Please provide a Minecraft Username!");
 
+    let username = args[0];
+    let opts = args.slice(0);
+    let endpoint: string;
+
+    if(opts.includes("noouter")) endpoint = "/armor/body"
+    else endpoint = "/body"
+
     let SkinEmbed = new Discord.MessageEmbed()
-        .setTitle(`Minecraft Skin for ${args[0]}`)
-        .setImage(`https://minotar.net/body/${args[0]}/200.png`)
+        .setTitle(`Minecraft Skin for ${username}`)
+        .setImage(`https://minotar.net/${endpoint}/${username}/200.png`)
         .setColor(globals.config.embedColors.default)
         .setFooter("Yarn", client.user.displayAvatarURL())
+        .setURL(`https://namemc.com/profile/${username}`)
         
     message.channel.send({embed: SkinEmbed})
 })
