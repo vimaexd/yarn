@@ -59,7 +59,7 @@ loadCommands(path.join(__dirname, 'commands'))
 
 client.on('ready', () => {
     let guildAmount = client.guilds.cache.size
-    client.user?.setActivity(`to ${guildAmount} ${guildAmount > 1 ? "servers" : "server"} - ${globals.prefix}help`, {type: 'LISTENING'})
+    client.user?.setActivity(`${guildAmount} ${guildAmount > 1 ? "servers" : "server"} - ${globals.prefix}help`, {type: 'LISTENING'})
     console.log(`✅ - YarnBot is up. - ${globals.env} env`)
 })
 
