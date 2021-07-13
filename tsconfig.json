@@ -15,5 +15,8 @@
   "include": [
       "src/**/*",
       "assets/**/*"
+  ],
+  "exclude": [
+    "src/legacy"
   ]
 }

@@ -54,7 +54,7 @@ class Loaders {
         let fileExtension = f.name.split(".")[f.name.split(".").length - 1]
         let moduleName = f.name.replace(".js", "")
 
-        if(!f.name.endsWith(".js") && !f.name.endsWith(".ts")) return;
+        if(!f.name.endsWith(".js") && !f.name.endsWith(".ts") || f.name.endsWith(".map")) return;
         if(f.name.split("")[0] == "_") return "subcmd";
     
         try {
