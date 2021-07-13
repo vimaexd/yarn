@@ -92,9 +92,8 @@ class Loaders {
             if(globals.env === "development") {
                 const devsrv = await client.guilds.fetch(globals.config.serverId)
                 await devsrv.commands.set(data.concat(dev_data));
-            } else {
-                await this.client.application?.commands.set(data);
             }
+            await this.client.application?.commands.set(data);
         } catch(err) {
             console.log(err)
             spinner.fail("Error updating slash commands!")
