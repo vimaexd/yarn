@@ -13,6 +13,7 @@
       "strictNullChecks": false
   },
   "include": [
-      "src/**/*"
+      "src/**/*",
+      "assets/**/*"
   ]
 }

@@ -1,5 +1,6 @@
 import Discord, { MessageEmbed } from "discord.js"
-import Command from "../../classes/Command"
+import dayjs from "dayjs"
+import Command from "../../../classes/Command"
 
 const Cmd = new Command({
     enabled: true,
@@ -21,13 +22,14 @@ const Cmd = new Command({
         .setDescription("WIP")
         .setColor(globals.config.embedColors.default)
         .setFooter("Yarn", client.user.displayAvatarURL())
+        .setTimestamp(dayjs().valueOf())
 
     categories.forEach(cat => {
         let names: Array<string> = []
         globals.commands.forEach((v: Command, k: string) => {
-            (v.meta.category == cat) ? names.push(v.meta.name) : void(0)
+            (v.meta.category == cat) && names.push(v.meta.name)
         })
-        embed.addField(cat, names.map(n => `\`${n}\``).join(" "), true)
+        embed.addField(cat, names.map(n => `\`${n}\``).join(" "))
     })
     
     message.channel.send({embed: embed})

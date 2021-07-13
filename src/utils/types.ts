@@ -1,15 +1,18 @@
-import Command from "../classes/Command";
+import Cotton from "../classes/Cotton"
+import Loaders from "../loaders";
 
 export interface YarnGlobals {
     prefix?: string;
-    config?: YarnConfig;
+    // config?: YarnConfig;
+    config?: any;
     env?: string;
-    commands?: Map<string, Command>
+    cottons?: Map<string, Cotton>
     aliases?: Map<string, string>
+    loader?: Loaders
 }
 
-export interface YarnCommandObject {
-    default: Command
+export interface YarnInteractionObject {
+    default: Cotton
 }
 
 export interface YarnConfig {

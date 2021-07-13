@@ -1,6 +1,6 @@
 import { inspect } from "util"
 import Discord, { MessageEmbed } from "discord.js"
-import Command from "../../classes/Command"
+import Command from "../../../classes/Command"
 
 const Cmd = new Command({
     enabled: true,

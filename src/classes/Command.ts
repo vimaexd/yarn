@@ -1,7 +1,7 @@
 import Discord from "discord.js"
 import { YarnGlobals } from "../utils/types"
 
-interface CommandMeta {
+export interface CommandMeta {
     name: string,
     enabled: boolean,
     trigger: Array<string>,
@@ -11,6 +11,7 @@ interface CommandMeta {
 }
 
 export default class Command {
+    client: Discord.Client
     meta: CommandMeta
     run: (client: Discord.Client, message: Discord.Message, args: Array<string>, globals: object) => any
 
