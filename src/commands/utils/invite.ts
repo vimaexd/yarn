@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import _ from "lodash";
 import { urban } from '../../utils/apis'
-import Discord, { Emoji, Message, MessageEmbed } from "discord.js"
+import Discord, { Emoji, Message, MessageActionRow, MessageButton, MessageEmbed } from "discord.js"
 import Cotton from "../../classes/Cotton"
 import e from "express";
 
@@ -39,33 +39,45 @@ export default new Cotton({
 
   const embed = new MessageEmbed();
   embed.setColor("BLURPLE")
-  embed.setAuthor(`Invite to ${invite.guild.name}`, invite.guild.iconURL({size: 1024, format: "png"}))
-  embed.addField(`**${invite.guild.name}**  ${guildBadges.join(" ")}`, `
-  ID: \`${invite.guild.id}\`
-  Verification Level: \`${invite.guild.verificationLevel}\`
-  NSFW Level: \`${invite.guild.nsfwLevel}\`
-  Vanity URL: ${(invite.guild.vanityURLCode) ? `<https://discord.gg/${invite.guild.vanityURLCode}>` : `None`}
+  embed.setTitle(`${invite.guild.name}  ${guildBadges.join(" ")}`)
+  embed.setDescription(`
+  > *${invite.guild.description || "No description"}*
+
+  **Vanity URL**: ${(invite.guild.vanityURLCode) ? `<https://discord.gg/${invite.guild.vanityURLCode}>` : `None`}
+  **Server ID**: ${invite.guild.id}
+  **Verification Level**: ${_.capitalize(invite.guild.verificationLevel)}
+  **NSFW Level**: ${_.capitalize(invite.guild.nsfwLevel)}
   `)
-  embed.addField("Server features", invite.guild.features
+  embed.addField("Features", invite.guild.features
     .map(f => (
       f.split("_").map(a => (_.capitalize(a))).join(" ")
     ))
-    .join(", ")
+    .join(", ") || "None"
   )
-  embed.addField("Server assets", guildImages.join("\n"), true)
+  embed.addField("Assets", guildImages.map(i => `● ${i}`).join("\n"), true)
   if(code !== invite.guild.vanityURLCode) {
     embed.addField("Invite settings", `
-      Max Uses - ${invite.maxUses || "Infinite"}
-      Max Age - ${invite.maxAge || "Infinite"}
-      Expires - ${(invite.expiresAt) ? `${expire.format('DD-MM-YYYY HH:mm:ss')} (<t:${expire.unix()}:R>)` : `Never`}
+      **Channel**: ${invite.channel.name} (<#${invite.channel.id}>)
+      **Inviter**: ${invitee}
+      **Max Uses**: ${invite.maxUses || "Infinite"}
+      **Max Age**: ${invite.maxAge || "Infinite"}
+      **Expires**: ${(invite.expiresAt) ? `${expire.format('DD-MM-YYYY HH:mm:ss')} (<t:${expire.unix()}:R>)` : `Never`}
     `, true)
-    embed.addField("Invited by", invitee)
   }
   embed.addField("Invite Code", `\`${code}\``)
   embed.setTimestamp(dayjs().valueOf())
   if(invite.guild.icon) embed.setThumbnail(invite.guild.iconURL({size: 1024}))
   
+  const row = new MessageActionRow();
+  const joinBtn = new MessageButton()
+    .setURL("https://discord.gg/" + invite.code)
+    .setStyle("LINK")
+    .setLabel("Join server")
+
+  row.addComponents([joinBtn])
+
   interaction.reply({
-    embeds: [embed]
+    embeds: [embed],
+    components: [row]
   })
 })
