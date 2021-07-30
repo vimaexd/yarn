@@ -55,7 +55,7 @@ const Cmd = new Cotton({
   const activity = activities.find(a => (activityKey === a.slug))
 
   const member = await interaction.guild.members.fetch(interaction.user.id);
-  if(!.voice.channelId) return interaction.reply({content: "You must be in a Voice Channel to use this command!", ephemeral: true});
+  if(!member.voice.channelId) return interaction.reply({content: "You must be in a Voice Channel to use this command!", ephemeral: true});
 
   try {
     const res = await axios.post(
