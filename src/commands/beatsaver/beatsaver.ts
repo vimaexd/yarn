@@ -37,9 +37,9 @@ const Cmd = new Cotton({
       }]
      }]
 }, async (client, interaction, globals) => {
-  switch(interaction.options.first().name){
+  switch(interaction.options.getSubcommand()){
     case "map":
-      const key = interaction.options.first().options.first().value;
+      const key = interaction.options.getString("key");
       beatsaver.get(`/maps/detail/${key}`)
         .then(res => {
           const map = res.data;

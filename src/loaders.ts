@@ -154,7 +154,7 @@ class Loaders {
 
         fs.readdir(directory, {withFileTypes: true}, async (err, files: fs.Dirent[]) => {
             if(err) throw err;
-            if(files.length < 0) return console.log(`No files to load in ${directory}`)
+            if(files.length === 0) return console.log(`No files to load in ${directory}`)
     
             let loaded = 0;
 

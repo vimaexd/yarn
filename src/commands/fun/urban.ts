@@ -7,18 +7,18 @@ const Cmd = new Cotton({
     enabled: true,
     name: "urban",
     trigger: ["urban", "urbandictionary"],
-    description: "Get a definition from the Urban Dictionary",
+    description: "Get a definition from urbandictionary.com",
     usage: "urban [term]",
     category: "Fun",
     options: [{
         name: "term",
         type: 'STRING',
-        description: "The term to search from Urban Dictionary",
+        description: "The term to search from the Urban Dictionary",
         required: true
     }]
 }, async (client, interaction, globals) => {
     try {
-        let _term = interaction.options.first().value
+        let _term = interaction.options.getString("term");
         if(!_term) return interaction.reply({ephemeral: true, content: ":x: Please specify a term to search for"})
 
         let res = await urban.get(`/define?term=${_term}`);

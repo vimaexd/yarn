@@ -66,9 +66,9 @@ const Cmd = new Cotton({
         }]
     }]
 }, async (client, interaction, globals) => {
-  switch(interaction.options.first().name){
+  switch(interaction.options.getSubcommand()){
     case "player":
-      const uuid = await inputToUuid(interaction.options.first().options.first().value.toString())
+      const uuid = await inputToUuid(interaction.options.getString("user"))
       if(!uuid) return interaction.reply({ephemeral: true, content: "Invalid Username/UUID supplied!"}) 
 
       hypixel.get('/player', { 

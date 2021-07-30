@@ -31,10 +31,10 @@ const Cmd = new Cotton({
         }]
     }]
 }, async (client, interaction, globals) => {
-    switch(interaction.options.first().name){
+    switch(interaction.options.getSubcommand()){
         case "server":
             try {
-                let adr = interaction.options.first().options.get("address").value;
+                let adr = interaction.options.getString("address");
         
                 let res = await axios.get(`https://api.mcsrvstat.us/2/${adr}`);
                 let server = res.data;
@@ -67,7 +67,7 @@ const Cmd = new Cotton({
             }
 
         case "player":
-            const uuid = await inputToUuid(interaction.options.first().options.get("player").value.toString())
+            const uuid = await inputToUuid(interaction.options.getString("player"))
             if(!uuid) return interaction.reply({ephemeral: true, content: "Invalid UUID/Username entered"})
             
             try {
