@@ -3,39 +3,59 @@ import Discord, { GuildMember, MessageEmbed } from "discord.js"
 import Cotton from "../../classes/Cotton"
 import dayjs from "dayjs";
 
-const activities = [
-  {
-    name: "YouTube Together",
-    slug: "youtube",
-    aid: "755600276941176913"
-  },
-  {
-    name: "Betrayal.io",
-    slug: "betrayal",
-    aid: "773336526917861400"
-  },
-  {
-    name: "Poker Night",
-    slug: "poker",
-    aid: "755827207812677713"
-  },
-  {
-    name: "Fishington.io",
-    slug: "fishington",
-    aid: "814288819477020702"
-  },
-  {
-    name: "Chess in the Park",
-    slug: "chess",
-    aid: "832012774040141894"
-  },
-  /* datamined from the js but unsure what it is? */
-  // {
-  //   name: "Xbox",
-  //   slug: "xbox",
-  //   aid: "438122941302046720"
-  // },
-]
+    const activities = [
+        {
+            name: "YouTube Together",
+            slug: "youtube",
+            aid: "755600276941176913"
+        },
+        {
+            name: "Betrayal.io",
+            slug: "betrayal",
+            aid: "773336526917861400"
+        },
+        {
+            name: "Poker Night",
+            slug: "poker",
+            aid: "755827207812677713"
+        },
+        {
+            name: "Fishington.io",
+            slug: "fishington",
+            aid: "814288819477020702"
+        },
+        {
+            name: "Chess in the Park",
+            slug: "chess",
+            aid: "832012774040141894"
+        },
+        {
+            name: "Letter Tile",
+            slug: "lettertile",
+            aid: "879863686565621790"
+        },
+        {
+            name: "Word Snack",
+            slug: "wordsnack",
+            aid: "879863976006127627"
+        },
+        {
+            name: "Doodle Crew",
+            slug: "doodlecrew",
+            aid: "878067389634314250"
+        },
+        {
+            name: "Spellcast",
+            slug: "spellcast",
+            aid: "852509694341283871"
+        },
+        /* datamined from the js but unsure what it is? */
+        // {
+        //   name: "Xbox",
+        //   slug: "xbox",
+        //   aid: "438122941302046720"
+        // },
+    ]
 
 const Cmd = new Cotton({
     enabled: true,
