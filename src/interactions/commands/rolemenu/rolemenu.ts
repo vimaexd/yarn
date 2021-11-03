@@ -152,7 +152,7 @@ const Cmd = new Cotton({
       const rows = generateRows(btns);
 
       try {
-        interaction.channel.send(generateMessage(rows))
+        await interaction.channel.send(generateMessage(rows))
         interaction.reply({content: 'Message posted!', ephemeral: true})
       } catch(err) {
         console.log(err)

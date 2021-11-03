@@ -3,6 +3,7 @@ services:
     depends_on: 
       - db
     build: .
+    restart: always
     volumes:
       - .:/app
 

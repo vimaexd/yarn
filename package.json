@@ -7,8 +7,8 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "start": "yarn && yarn dbgen && tsnd --exit-child --respawn --poll --interval 1000 src/index.ts",
-    "start:prod": "yarn && yarn dbgen && yarn prisma migrate deploy && ts-node src/index.ts",
+    "dev": "yarn && yarn dbgen && tsnd --exit-child --respawn --poll --interval 1000 src/index.ts",
+    "start": "yarn && yarn dbgen && yarn prisma migrate deploy && ts-node src/index.ts",
     "dbgen": "yarn prisma generate",
     "build": "tsc"
   },
