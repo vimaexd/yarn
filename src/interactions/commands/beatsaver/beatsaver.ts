@@ -1,6 +1,6 @@
-import { beatsaver } from "../../utils/apis";
+import { beatsaver } from "../../../utils/apis";
 import Discord, { MessageEmbed } from "discord.js"
-import Cotton from "../../classes/Cotton"
+import Cotton from "../../../classes/Command"
 
 import { generateMapButtons, generateMapEmbed } from './_shared'
 
@@ -40,7 +40,7 @@ const Cmd = new Cotton({
   switch(interaction.options.getSubcommand()){
     case "map":
       const key = interaction.options.getString("key");
-      beatsaver.get(`/maps/detail/${key}`)
+      beatsaver.get(`/maps/id/${key}`)
         .then(res => {
           const map = res.data;
 
@@ -49,6 +49,7 @@ const Cmd = new Cotton({
           interaction.reply({embeds: [embed], components: buttons})
         })
         .catch(err => {
+          console.log(err)
           console.log(err.response)
           if(err.response.status == 404) return interaction.reply({ephemeral: true, content: "Invalid map key!"})
           else interaction.reply({ephemeral: true, content: "An unexpected error occured getting that map from BeatSaver!"})

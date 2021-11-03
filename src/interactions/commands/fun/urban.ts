@@ -1,15 +1,12 @@
 import dayjs from "dayjs";
-import { urban } from '../../utils/apis'
+import { urban } from '../../../utils/apis'
 import Discord, { MessageEmbed } from "discord.js"
-import Cotton from "../../classes/Cotton"
+import Cotton from "../../../classes/Command"
 
 const Cmd = new Cotton({
     enabled: true,
     name: "urban",
-    trigger: ["urban", "urbandictionary"],
     description: "Get a definition from urbandictionary.com",
-    usage: "urban [term]",
-    category: "Fun",
     options: [{
         name: "term",
         type: 'STRING',

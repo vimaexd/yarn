@@ -1,9 +1,8 @@
 import dayjs from "dayjs";
 import _ from "lodash";
-import { urban } from '../../utils/apis'
+import { urban } from '../../../utils/apis'
 import Discord, { Emoji, Message, MessageActionRow, MessageButton, MessageEmbed } from "discord.js"
-import Cotton from "../../classes/Cotton"
-import e from "express";
+import Cotton from "../../../classes/Command"
 
 export default new Cotton({
     enabled: true,

@@ -1,8 +1,8 @@
-import Discord, { CommandInteraction, MessageComponentInteraction } from "discord.js";
-import Cotton from "../classes/Cotton"
+import Discord, { AutocompleteInteraction, ButtonInteraction, CommandInteraction, MessageComponentInteraction } from "discord.js";
+import Cotton from "../classes/Command"
 import { YarnGlobals } from "../utils/types";
 
-import BeatSaverButtonHandler from '../commands/beatsaver/_btn';
+import BtnRolemenuHandler from '../interactions/buttons/rolemenu';
 
 export default (_interaction: Discord.Interaction, client: Discord.Client, globals: YarnGlobals) => {
   let interaction;
@@ -17,19 +17,19 @@ export default (_interaction: Discord.Interaction, client: Discord.Client, globa
       if(!cmd.meta.enabled) return;
       cmd.run(client, interaction, globals)
       break;
-
+      
+    // case "APPLICATION_COMMAND_AUTOCOMPLETE":
+    //   interaction = _interaction as AutocompleteInteraction
+    //   interaction.
+    
     case "MESSAGE_COMPONENT":
-      interaction = _interaction as MessageComponentInteraction;
-      if(!interaction.isButton()) return;
-
-      switch(interaction.customId){
-        case "beatsaver_nextpage":
-        case "beatsaver_prevpage":
-          BeatSaverButtonHandler(interaction)
-          break;
-          
-        default:
-          return;
+      interaction = _interaction as MessageComponentInteraction
+      switch(interaction.componentType){
+        case "BUTTON":
+          interaction = _interaction as ButtonInteraction
+          if(interaction.customId.startsWith("rolemenu_")){
+            BtnRolemenuHandler(client, interaction, globals)
+          }
       }
   }
 }

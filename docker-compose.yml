@@ -1,0 +1,13 @@
+services:
+  yarn:
+    depends_on: 
+      - db
+    build: .
+    volumes:
+      - .:/app
+
+  db:
+    image: postgres
+    restart: always
+    env_file: 
+      - .env

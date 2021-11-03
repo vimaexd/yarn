@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import axios from "axios";
 import Discord, { MessageEmbed } from "discord.js"
-import Cotton from "../../classes/Cotton"
+import Cotton from "../../../classes/Command"
 import { inputToUuid } from "./hypixel";
 
 const Cmd = new Cotton({

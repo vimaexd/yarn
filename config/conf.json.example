@@ -1,0 +1,11 @@
+{
+    "defaultPrefix": {
+        "production": "y/",
+        "development": "yb/"
+    },
+    "embedColors": {
+        "default": "#2f3136"
+    },
+    "ownerId": "577743466940071949",
+    "serverId": "606089486660534296"
+}

@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
-import { urban } from '../../utils/apis'
+import { urban } from '../../../../utils/apis'
 import Discord, { DiscordAPIError, Emoji, Message, MessageEmbed } from "discord.js"
-import Cotton from "../../classes/Cotton"
+import Cotton from "../../../../classes/Command"
+import { YarnGlobals } from "../../../../utils/types";
 
 enum UserInfoPage {
   Info = "info",
@@ -124,7 +125,7 @@ const getEmbed = async (user: Discord.User, guildUser: Discord.GuildMember | und
   }
 }
 
-const getButtons = (user: Discord.User, guildMember: Discord.GuildMember | undefined, page: UserInfoPage | string, client?: Discord.Client, perms?: Discord.Permissions): Discord.MessageActionRow[] => {
+const getButtons = (user: Discord.User, guildMember: Discord.GuildMember | undefined, page: UserInfoPage | string, client?: Discord.Client, perms?: any): Discord.MessageActionRow[] => {
   switch(page){
     case UserInfoPage.Avatar:
       const avatarRow = new Discord.MessageActionRow();
@@ -141,7 +142,7 @@ const getButtons = (user: Discord.User, guildMember: Discord.GuildMember | undef
       const btn3 = new Discord.MessageButton()
         .setLabel("GIF")
         .setStyle("LINK")
-        .setURL(user.avatarURL({size: 1024, format: "gif"}))
+        .setURL(user.avatarURL({size: 1024, dynamic: true}))
       
       const btn4 = new Discord.MessageButton()
         .setLabel("WEBP")
@@ -199,16 +200,7 @@ const getButtons = (user: Discord.User, guildMember: Discord.GuildMember | undef
   }
 }
 
-export default new Cotton({
-    enabled: true,
-    name: "userinfo",
-    description: "Get someone's info by ID or Mention",
-    options: [{
-        name: "user",
-        type: 'USER',
-        description: "The user to get info on"
-    }]
-}, async (client, interaction, globals) => {
+export default async (client: Discord.Client, interaction: Discord.CommandInteraction, globals: YarnGlobals) => {
   const user = interaction.options.getUser('user') || interaction.user;
   
   let guildUser: Discord.GuildMember | undefined;
@@ -217,7 +209,7 @@ export default new Cotton({
   } catch {
     guildUser = undefined;
   }
-  const perms = new Discord.Permissions(interaction.member.permissions);
+  const perms = interaction.member.permissions;
 
   const row = new Discord.MessageActionRow()
   const select = new Discord.MessageSelectMenu()
@@ -303,4 +295,4 @@ export default new Cotton({
       components: []
     })
   })
-})
+}

@@ -3,10 +3,9 @@ import * as dotenv from "dotenv";
 import * as fs from "fs";
 import * as path from "path";
 
-import { connectToDB } from './db/database';
+import { PrismaClient } from '@prisma/client'
 import { YarnGlobals } from "./utils/types"
 import config from "../config/conf.json";
-import Command from "./classes/Command";
 import Loaders from "./loaders";
 
 dotenv.config()
@@ -21,14 +20,15 @@ globals.config = config as any
 (process.env.NODE_ENV === "production") ? globals.env = "production" : globals.env = "development"
 
 // Initialize connection to Discord and DB
-client.login(process.env.TOKEN)
-connectToDB(process.env.MONGO)
+client.login(process.env.AUTH_TOKEN)
+globals.db = new PrismaClient()
 
 // Load commands & events
 globals.loader = new Loaders(client)
 // globals.loader.loadJobs(path.join(__dirname, 'jobs'), client)
-globals.loader.loadInteractions(path.join(__dirname, 'commands'), false)
+globals.loader.loadInteractions(path.join(__dirname, 'interactions', 'commands'), false)
+globals.loader.loadInteractions(path.join(__dirname, 'interactions', 'ctx'), false)
 globals.loader.loadEvents(path.join(__dirname, 'events'), client)
-setTimeout(() => globals.loader.updateSlashCommands(client), 2000);
+globals.loader.updateSlashCommands(client)
 
 export { globals }

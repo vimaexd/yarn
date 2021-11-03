@@ -1,7 +1,12 @@
 import axios from "axios";
-import Discord, { GuildMember, MessageEmbed } from "discord.js"
-import Cotton from "../../classes/Cotton"
+import Discord, { GuildMember, Message, MessageEmbed } from "discord.js"
+import Cotton from "../../../classes/Command"
 import dayjs from "dayjs";
+
+/*
+  NOTE
+  disabled due to discord breaking this method :(
+*/
 
 const activities = [
   {
@@ -38,28 +43,34 @@ const activities = [
 ]
 
 const Cmd = new Cotton({
-    enabled: true,
+    enabled: false,
     name: "activity",
     description: "Do activities in a voice channel!",
     options: [{
       name: 'type',
-      description: 'What activity you would like to initiate',
+      description: 'Which game you would like to play from the Discord Game Library',
       type: 'STRING',
       choices: activities.map(a => {
         return {"name": a.name, "value": a.slug}
       }),
+      required: true
+    },
+    {
+      name: "vc",
+      description: "A voice channel to setup the activity for",
+      type: "CHANNEL",
       required: true
     }]
 }, async (client, interaction, globals) => {
   const activityKey = interaction.options.getString('type')
   const activity = activities.find(a => (activityKey === a.slug))
 
-  const member = await interaction.guild.members.fetch(interaction.user.id);
-  if(!member.voice.channelId) return interaction.reply({content: "You must be in a Voice Channel to use this command!", ephemeral: true});
+  const channel = interaction.options.getChannel("vc");
+  if(channel.type != "GUILD_VOICE") return interaction.reply({content: "The channel input must be a Voice Channel. Stage Channels are not supported.", ephemeral: true})
 
   try {
     const res = await axios.post(
-      `https://discord.com/api/v8/channels/${member.voice.channelId}/invites`, 
+      `https://discord.com/api/v8/channels/${channel.id}/invites`, 
       JSON.stringify({
         max_age: 86400,
         max_uses: 0,

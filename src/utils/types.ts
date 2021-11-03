@@ -1,27 +1,13 @@
-import Cotton from "../classes/Cotton"
+import { PrismaClient } from "@prisma/client";
+import Cotton from "../classes/Command"
 import Loaders from "../loaders";
 
 export interface YarnGlobals {
     prefix?: string;
-    // config?: YarnConfig;
     config?: any;
+    db?: PrismaClient;
     env?: string;
     cottons?: Map<string, Cotton>
     aliases?: Map<string, string>
     loader?: Loaders
-}
-
-export interface YarnInteractionObject {
-    default: Cotton
-}
-
-export interface YarnConfig {
-    defaultPrefix: {
-        production: string;
-        development: string;
-    }
-    embedColors: {
-        default: string;
-    }
-    ownerId: string;
 }

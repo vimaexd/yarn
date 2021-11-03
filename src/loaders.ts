@@ -2,14 +2,16 @@ import * as fs from "fs";
 import * as path from "path";
 import * as Discord from "discord.js";
 import ora, { Ora } from "ora";
-import { YarnGlobals, YarnInteractionObject } from "./utils/types"
+import { YarnGlobals } from "./utils/types"
 import { globals } from './index';
-import Cotton from "./classes/Cotton";
+import Cotton from "./classes/Command";
 
 /**
  * @classdesc Command & event loader for Yarn
  * @param client Discord Client instance
  */
+
+// TODO: Rewrite this fucking hellhole
 
 class Loaders {
     private client: Discord.Client
@@ -27,7 +29,7 @@ class Loaders {
      */
     loadInteractions = async (directory: string, noAnnounce: boolean) => {
         let spinner;
-        if(!noAnnounce) spinner = ora(`Loading cottons in folder ${directory.replace(__dirname, "").replace(path.sep, "")}`).start()
+        if(!noAnnounce) spinner = ora(`Loading commands in folder ${directory.replace(__dirname, "").replace(path.sep, "")}`).start()
         await this.loadInteractionFolder(directory)
         spinner.stopAndPersist({text: `Cottons loaded!  `, symbol: "🌟"})
     }
@@ -58,7 +60,7 @@ class Loaders {
         if(f.name.split("")[0] == "_") return "subcmd";
     
         try {
-            const cmd: YarnInteractionObject = await import(path.join(dir, moduleName))
+            const cmd: { default: Cotton } = await import(path.join(dir, moduleName))
             if(!cmd.default.meta.enabled) return "disabled";
             globals.cottons.set(cmd.default.meta.name, cmd.default)
             return true;
@@ -77,28 +79,24 @@ class Loaders {
             let dev_data: Discord.ApplicationCommandData[] = []
 
             globals.cottons.forEach((value: Cotton, key: string) => {
-                if(value.meta.category === "dev") return dev_data.push({
-                    name: value.meta.name,
-                    description: value.meta.description,
-                    options: value.meta.options
-                });
-
                 data.push({
                     name: value.meta.name,
                     description: value.meta.description,
-                    options: value.meta.options
+                    options: value.meta.options,
+                    type: value.meta.type || "CHAT_INPUT"
                 })
             })
             if(globals.env === "development") {
                 const devsrv = await client.guilds.fetch(globals.config.serverId)
                 await devsrv.commands.set(data.concat(dev_data));
+                await this.client.application?.commands.set([]);
+            } else {
+                await this.client.application?.commands.set(data);
             }
-            await this.client.application?.commands.set(data);
-        } catch(err) {
-            console.log(err)
-            spinner.fail("Error updating slash commands!")
-        } finally {
             spinner.succeed("Slash commands updated!")
+        } catch(err) {
+            spinner.fail("Error updating slash commands! Retrying in 2 seconds..")
+            setTimeout(() => this.updateSlashCommands(client), 2000)
         }
     }
 

@@ -1,7 +1,7 @@
-import { hypixel } from "../../utils/apis";
+import { hypixel } from "../../../utils/apis";
 import axios from "axios";
 import Discord, { MessageEmbed } from "discord.js"
-import Cotton from "../../classes/Cotton"
+import Cotton from "../../../classes/Command"
 import dayjs from "dayjs";
 
 /**
@@ -50,10 +50,7 @@ const cleanRankName = (input: string) => {
 const Cmd = new Cotton({
     enabled: true,
     name: "hypixel",
-    trigger: ["hypixel"],
     description: "Get information about the Minecraft server, Hypixel",
-    usage: "hypixel",
-    category: "Fun",
     options: [{
         name: "player",
         type: "SUB_COMMAND",

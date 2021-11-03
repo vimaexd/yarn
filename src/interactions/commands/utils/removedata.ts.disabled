@@ -1,0 +1,60 @@
+import Discord, { ButtonInteraction, CommandInteraction, MessageEmbed } from "discord.js"
+import getGuild from "../../../db/utils/getGuild";
+import Cotton from "../../../classes/Command"
+
+const Cmd = new Cotton({
+    enabled: true,
+    name: "removedata",
+    description: "Remove all data that Yarn records specific to your server"
+}, async (client, interaction, globals) => {
+  if(!(interaction.member as Discord.GuildMember).permissions.has("MANAGE_GUILD"))
+    return interaction.reply({"content": ":x: You must have the **Manage Guild** permission to use this command!"})
+
+  const yesBtn = new Discord.MessageButton()
+    .setStyle("DANGER")
+    .setLabel("I understand, delete")
+    .setEmoji("🗑️")
+    .setCustomId("removedata")
+
+  const noBtn = new Discord.MessageButton()
+    .setStyle("SECONDARY")
+    .setLabel("No!")
+    .setEmoji("❌")
+    .setCustomId("no")
+  
+  const collector = new Discord.InteractionCollector(client, {
+    componentType: "BUTTON"
+  })
+
+  collector.on('collect', async (newInteraction) => {
+    if(!newInteraction.isButton) return;
+
+    const btnInteraction = (newInteraction as ButtonInteraction);
+    if(interaction.id != btnInteraction.message.interaction.id) return;
+    if(btnInteraction.member.user.id != interaction.member.user.id) return btnInteraction.reply("You can't push that!")
+    
+    switch(btnInteraction.customId){
+      case "no":
+        await interaction.deleteReply();
+        break;
+      
+      case "removedata":
+        // await Guild.deleteOne({guildId: interaction.guild.id}, async (err) => {
+        //   if(err) {
+        //     await btnInteraction.update({ content: ':warning: An error occured when trying to remove your data!', components: [] });
+        //     console.log(err)
+        //   }
+        //   await btnInteraction.update({ content: `:white_check_mark: Data for **${interaction.guild.name}** has been removed.`, components: [] });
+        // })
+    }
+  })
+
+  await interaction.reply({
+    content: "Are you sure you want to do this? **Removing your data may break some features!!**",
+    components: [new Discord.MessageActionRow().addComponents([yesBtn, noBtn])]
+  })
+
+
+})
+
+export default Cmd
