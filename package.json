@@ -18,12 +18,16 @@
     "dayjs": "^1.10.4",
     "discord.js": "^13.3.1",
     "dotenv": "^8.2.0",
+    "figlet": "^1.5.2",
+    "gradient-string": "^1.2.0",
     "lodash": "^4.17.21",
     "ora": "^5.4.0",
     "prisma": "3.4.0",
     "typescript": "^4.3.5"
   },
   "devDependencies": {
+    "@types/figlet": "^1.5.4",
+    "@types/gradient-string": "^1.1.2",
     "@types/lodash": "^4.14.171",
     "@types/mongoose": "^5.11.97",
     "@types/node": "^16.4.3",

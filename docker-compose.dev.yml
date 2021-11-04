@@ -1,0 +1,5 @@
+services:
+  yarn:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.dev

@@ -11,7 +11,7 @@ export default (_interaction: Discord.Interaction, client: Discord.Client, globa
     case "APPLICATION_COMMAND":
       interaction = _interaction as CommandInteraction;
       if(interaction.user.bot) return;
-      let cmd: Cotton = globals.cottons.get(interaction.commandName);
+      let cmd: Cotton = globals.commands.get(interaction.commandName);
 
       if(!cmd) return;
       if(!cmd.meta.enabled) return;

@@ -3,7 +3,7 @@ import { YarnGlobals } from "../utils/types";
 
 export default (client: Discord.Client, globals: YarnGlobals) => {
     setInterval(() => updateActivityMessage(client), 120000);
-    console.log(`✅ - Connected to Discord!`)
+    console.log(`✅ Connected to Discord!`)
 }
 
 const updateActivityMessage = (client: Discord.Client) => {

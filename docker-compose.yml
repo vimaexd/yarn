@@ -2,7 +2,6 @@ services:
   yarn:
     depends_on: 
       - db
-    build: .
     restart: always
     volumes:
       - .:/app
@@ -12,3 +11,5 @@ services:
     restart: always
     env_file: 
       - .env
+    volumes:
+      - ./data/pg:/var/lib/postgresql/data

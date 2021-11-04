@@ -3,34 +3,61 @@ import * as dotenv from "dotenv";
 import * as fs from "fs";
 import * as path from "path";
 
+import * as figlet from 'figlet';
+import {default as gradient} from 'gradient-string';
+
 import { PrismaClient } from '@prisma/client'
 import { YarnGlobals } from "./utils/types"
 import config from "../config/conf.json";
 import Loaders from "./loaders";
 
 dotenv.config()
-const client: Discord.Client = new Discord.Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] })
+class Bot {
+  client: Discord.Client;
+  globals: YarnGlobals;
 
-let globals: YarnGlobals = {}
+  constructor(){
+    // Globals
+    this.globals = {}
+    this.globals.commands = new Map;
+    this.globals.aliases = new Map;
+    this.globals.config = config as any
+    (process.env.NODE_ENV === "production") ? this.globals.env = "production" : this.globals.env = "development"
 
-globals.cottons = new Map;
-globals.aliases = new Map;
+    // Client
+    this.client = new Discord.Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] })
+    this.init();
+  }
 
-globals.config = config as any
-(process.env.NODE_ENV === "production") ? globals.env = "production" : globals.env = "development"
+  async init(){
+    console.log(`🧶 • env ${this.globals.env} • `)
 
-// Initialize connection to Discord and DB
-client.login(process.env.AUTH_TOKEN)
-globals.db = new PrismaClient()
+    this.globals.loader = new Loaders(this.client, this.globals)
+    this.globals.db = new PrismaClient()
 
-console.log(`🧶 Yarn - env ${globals.env}`)
+    // Load commands from multiple folders and merge maps
+    const dirs = [
+      path.join(__dirname, 'interactions', 'commands'),
+      path.join(__dirname, 'interactions', 'ctx')
+    ];
 
-// Load commands & events
-globals.loader = new Loaders(client)
-// globals.loader.loadJobs(path.join(__dirname, 'jobs'), client)
-globals.loader.loadInteractions(path.join(__dirname, 'interactions', 'commands'), false)
-globals.loader.loadInteractions(path.join(__dirname, 'interactions', 'ctx'), false)
-globals.loader.loadEvents(path.join(__dirname, 'events'), client)
-globals.loader.updateSlashCommands(client)
+    for await (const dir of dirs){
+      const ints = await this.globals.loader.loadInteractions(dir);
+      ints.forEach((v, k) => { 
+        this.globals.commands.set(k, v) 
+      })
+    }
 
-export { globals }
+    await this.globals.loader.loadEvents(path.join(__dirname, 'events'))
+    // await globals.loader.loadJobs(path.join(__dirname, 'jobs'), client)
+
+    await this.client.login(process.env.AUTH_TOKEN)
+    await this.globals.loader.updateSlashCommands(this.globals.commands)
+  }
+}
+
+const stringy = gradient(["#8548f5", "#fa93ff"]);
+console.log(gradient.pastel(figlet.textSync('yarn', 'Univers')));
+
+const bot = new Bot();
+export { bot }

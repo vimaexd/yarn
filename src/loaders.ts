@@ -3,82 +3,69 @@ import * as path from "path";
 import * as Discord from "discord.js";
 import ora, { Ora } from "ora";
 import { YarnGlobals } from "./utils/types"
-import { globals } from './index';
-import Cotton from "./classes/Command";
+import Command from "./classes/Command";
 
 /**
  * @classdesc Command & event loader for Yarn
  * @param client Discord Client instance
  */
 
-// TODO: Rewrite this fucking hellhole
-
 class Loaders {
-    private client: Discord.Client
-    speen: Ora
-    cmdCount: number;
-    
-    constructor(client: Discord.Client){
+    private globals: YarnGlobals;
+    private client: Discord.Client;
+    constructor(client: Discord.Client, globals: YarnGlobals){
         this.client = client;
-        this.cmdCount = 0;
+        this.globals = globals;
     }
 
     /**
      * Loads interactions (commands v2) with .js and .ts extension in folder recursively
      * @param directory Directory of commands (usually "commands")
      */
-    loadInteractions = async (directory: string, noAnnounce: boolean) => {
-        let spinner;
-        if(!noAnnounce) spinner = ora(`Loading commands in folder ${directory.replace(__dirname, "").replace(path.sep, "")}`).start()
-        await this.loadInteractionFolder(directory)
-        spinner.stopAndPersist({text: `Cottons loaded!  `, symbol: "🌟"})
-    }
-    
-    private loadInteractionFolder = async (directory: string) => {
-        fs.readdir(directory, {withFileTypes: true}, async (err, files: fs.Dirent[]) => {
-            if(err) throw err;
-            if(files.length < 0) return console.log(`No files to load in ${directory}`)
+    loadInteractions = async (directory: string): Promise<Map<string, Command>> => {
+        let interactions: Map<string, Command> = new Map;
+        let loaded: number = 0;
+        return new Promise((res, rej) => {
+            
+            try {
+                const files = fs.readdirSync(directory, {withFileTypes: true})
+                files.forEach(async f => {
+                    if(f.isDirectory()) {
+                        const recursion = await this.loadInteractions(path.join(directory, f.name));
+                        recursion.forEach((v, k) => { interactions.set(k, v) })
+                    }
 
-            files.forEach(async (f: fs.Dirent) => {
-                if(f.isDirectory()) return this.loadInteractionFolder(path.join(directory, f.name))
-                let cmdSpinner = ora(`Loading interaction ${f.name}`)
-                const cmdLoadStatus = await this.loadInteractionFile(f, directory)
+                    let fileExtension = f.name.split(".")[f.name.split(".").length - 1]
+                    let moduleName = f.name.replace(".js", "").replace(".ts", "")
+                    if(!f.name.endsWith(".js") && !f.name.endsWith(".ts")) return;
+                    if(f.name.split("")[0] == "_") return;
 
-                if(cmdLoadStatus === "disabled") return cmdSpinner.info(`Interaction ${f.name} is disabled`)
-                if(cmdLoadStatus === "subcmd") return cmdSpinner.info(`Interaction ${f.name} is not an interaction`)
-                if(!cmdLoadStatus) return cmdSpinner.fail(`Error loading interaction ${f.name}!`)
-                else cmdSpinner.succeed(`Loaded interaction ${f.name}!`)
-            })
+                    try {
+                        const interaction: { default: Command } = await import(path.join(directory, moduleName))
+                        if(!interaction.default.meta.enabled) return "disabled";
+                        interactions.set(interaction.default.meta.name, interaction.default);
+                        console.log(`❯ Loaded interaction ${f.name}`);
+                    } catch(err) {
+                        console.log(`❯ Error loading interaction ${f.name}!`)
+                        console.log(err)
+                    }
+                })
+                res(interactions)
+            } catch(err) {
+                console.log("❌ Error loading interactions!")
+                rej(err)
+            }
         })
     }
 
-    private loadInteractionFile = async (f: fs.Dirent, dir: string): Promise<string | boolean> => {
-        let fileExtension = f.name.split(".")[f.name.split(".").length - 1]
-        let moduleName = f.name.replace(".js", "")
-
-        if(!f.name.endsWith(".js") && !f.name.endsWith(".ts") || f.name.endsWith(".map")) return;
-        if(f.name.split("")[0] == "_") return "subcmd";
-    
-        try {
-            const cmd: { default: Cotton } = await import(path.join(dir, moduleName))
-            if(!cmd.default.meta.enabled) return "disabled";
-            globals.cottons.set(cmd.default.meta.name, cmd.default)
-            return true;
-        } catch(err) {
-            console.log(err)
-            return false;
-        }
-    }
-
-    updateSlashCommands = async (client: Discord.Client) => {
-        let spinner = ora(`Updating Slash commands`).start()
+    updateSlashCommands = async (commands: Map<string, Command>): Promise<void> => {
         try {
             if (!this.client.application?.owner) await this.client.application?.fetch();
 
             let data: Discord.ApplicationCommandData[] = []
             let dev_data: Discord.ApplicationCommandData[] = []
 
-            globals.cottons.forEach((value: Cotton, key: string) => {
+            commands.forEach((value: Command, key: string) => {
                 data.push({
                     name: value.meta.name,
                     description: value.meta.description,
@@ -86,17 +73,17 @@ class Loaders {
                     type: value.meta.type || "CHAT_INPUT"
                 })
             })
-            if(globals.env === "development") {
-                const devsrv = await client.guilds.fetch(globals.config.serverId)
+            if(this.globals.env === "development") {
+                const devsrv = await this.client.guilds.fetch(this.globals.config.serverId)
                 await devsrv.commands.set(data.concat(dev_data));
                 await this.client.application?.commands.set([]);
             } else {
                 await this.client.application?.commands.set(data);
             }
-            spinner.succeed("Slash commands updated!")
+            console.log(`✔️ Updated ${commands.size} slash commands!`)
         } catch(err) {
-            spinner.fail("Error updating slash commands! Retrying in 2 seconds..")
-            setTimeout(() => this.updateSlashCommands(client), 2000)
+            console.log("❌ Error updating slash commands! Retrying in 2 seconds")
+            setTimeout(() => this.updateSlashCommands(commands), 2000)
         }
     }
 
@@ -104,12 +91,10 @@ class Loaders {
      * Loads events from .js or .ts files in one folder.
      * @param directory Directory of events (usually "events")
      */
-    loadEvents = async (directory: string, client: Discord.Client): Promise<void> => {
-        const speen = ora(`Loading events in folder ${directory.replace(__dirname, "").replace(path.sep, "")}`).start()
-
+    loadEvents = async (directory: string): Promise<void> => {
         fs.readdir(directory, {withFileTypes: true}, async (err, files: fs.Dirent[]) => {
             if(err) throw err;
-            if(files.length === 0) return speen.stopAndPersist({text: ` No events to load  `, symbol: "⚠️"})
+            if(files.length === 0) return console.log(`✔️ No events to load`)
     
             let processed = 0, loaded = 0;
 
@@ -128,17 +113,15 @@ class Loaders {
                 import("./" + path.join(relativePath, moduleName))
                     .then((event) => {
                         loaded++;
-                        this.client.on(moduleName, (...args) => event.default(...args, client, globals));
-                        eventSpinner.succeed(`Loaded event ${f.name}`);
+                        this.client.on(moduleName, (...args) => event.default(...args, this.client, this.globals));
+                        console.log(`❯ Loaded event ${f.name}`);
                     })
                     .catch((err) => {
-                        eventSpinner.fail(`Error loading event ${f.name}!`)
+                        console.log(`❯ Error loading event ${f.name}!`)
                         console.log(err)
                     })
-                    
-                speen.text = `${loaded} events loaded!  `
 
-                if(processed === files.length) speen.stopAndPersist({symbol: "🌟"})
+                if(processed === files.length) console.log(`✔️ ${loaded} events loaded`)
             })
         })
     }
@@ -148,11 +131,9 @@ class Loaders {
     * @param directory Directory of events (usually "events")
     */
     loadJobs = async (directory: string, client: Discord.Client): Promise<void> => {
-        const speen = ora(`Loading jobs in folder ${directory.replace(__dirname, "").replace(path.sep, "")}`).start()
-
         fs.readdir(directory, {withFileTypes: true}, async (err, files: fs.Dirent[]) => {
             if(err) throw err;
-            if(files.length === 0) return console.log(`No files to load in ${directory}`)
+            if(files.length === 0) return console.log(`✔️ No jobs to load`)
     
             let loaded = 0;
 
@@ -169,21 +150,17 @@ class Loaders {
                 import("./" + path.join(relativePath, moduleName))
                     .then((job) => {
                         setInterval(job.run, job.delay, [client])
-                        eventSpinner.succeed(`Loaded job ${f.name}`)
+                        console.log(`❯ Loaded job ${f.name}`)
                     })
                     .catch((err) => {
-                        eventSpinner.fail(`Error loading job ${f.name}!`)
+                        console.log(`❯ Job ${f.name} failed to load!`)
                         console.log(err)
                     })
 
                 loaded++;
-                if(loaded == files.length) speen.stopAndPersist({text: "Events loaded!  ", symbol: "🌟"})
+                if(loaded == files.length) console.log(`✔️ ${loaded} jobs loaded`)
             })
         })
-    }
-
-    cry(){
-        console.log(";w;")
     }
 }
 

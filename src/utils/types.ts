@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import Cotton from "../classes/Command"
+import Command from "../classes/Command"
 import Loaders from "../loaders";
 
 export interface YarnGlobals {
@@ -7,7 +7,7 @@ export interface YarnGlobals {
     config?: any;
     db?: PrismaClient;
     env?: string;
-    cottons?: Map<string, Cotton>
+    commands?: Map<string, Command>;
     aliases?: Map<string, string>
     loader?: Loaders
 }
