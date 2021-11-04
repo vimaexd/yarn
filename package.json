@@ -8,7 +8,7 @@
   "private": false,
   "scripts": {
     "dev": "yarn && yarn dbgen && tsnd --exit-child --respawn --poll --interval 1000 src/index.ts",
-    "start": "yarn && yarn dbgen && yarn prisma migrate deploy && ts-node src/index.ts",
+    "start": "yarn && yarn dbgen && yarn prisma migrate deploy && yarn build && node dist/src/index.ts",
     "dbgen": "yarn prisma generate",
     "build": "tsc"
   },
