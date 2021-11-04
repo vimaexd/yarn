@@ -23,6 +23,8 @@ globals.config = config as any
 client.login(process.env.AUTH_TOKEN)
 globals.db = new PrismaClient()
 
+console.log(`🧶 Yarn - env ${globals.env}`)
+
 // Load commands & events
 globals.loader = new Loaders(client)
 // globals.loader.loadJobs(path.join(__dirname, 'jobs'), client)
