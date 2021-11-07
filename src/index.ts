@@ -10,9 +10,11 @@ import { PrismaClient } from '@prisma/client'
 import { YarnGlobals } from "./utils/types"
 import config from "../config/conf.json";
 import Loaders from "./loaders";
+import Log from "./classes/Log";
 
 dotenv.config()
 class Bot {
+  private loader: Loaders;
   client: Discord.Client;
   globals: YarnGlobals;
 
@@ -21,19 +23,20 @@ class Bot {
     this.globals = {}
     this.globals.commands = new Map;
     this.globals.aliases = new Map;
-    this.globals.config = config as any
-    (process.env.NODE_ENV === "production") ? this.globals.env = "production" : this.globals.env = "development"
+    this.globals.config = config as any;
+    (process.env.NODE_ENV === "production") ? this.globals.env = "production" : this.globals.env = "development";
 
     // Client
-    this.client = new Discord.Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] })
+    this.client = new Discord.Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
     this.init();
   }
 
   async init(){
-    console.log(`🧶 • env ${this.globals.env} • `)
+    console.log(`🧶 • env ${this.globals.env}`)
 
-    this.globals.loader = new Loaders(this.client, this.globals)
+    this.globals.log = new Log({ prefix: "Bot", color: 'magenta' });
     this.globals.db = new PrismaClient()
+    this.loader = new Loaders(this.client, this.globals)
 
     // Load commands from multiple folders and merge maps
     const dirs = [
@@ -42,17 +45,18 @@ class Bot {
     ];
 
     for await (const dir of dirs){
-      const ints = await this.globals.loader.loadInteractions(dir);
+      const ints = await this.loader.loadInteractions(dir);
       ints.forEach((v, k) => { 
         this.globals.commands.set(k, v) 
       })
     }
 
-    await this.globals.loader.loadEvents(path.join(__dirname, 'events'))
+    await this.loader.loadEvents(path.join(__dirname, 'events'))
     // await globals.loader.loadJobs(path.join(__dirname, 'jobs'), client)
 
     await this.client.login(process.env.AUTH_TOKEN)
-    await this.globals.loader.updateSlashCommands(this.globals.commands)
+    await this.loader.updateSlashCommands(this.globals.commands)
+    this.globals.log.log("Initialization complete");
   }
 }
 

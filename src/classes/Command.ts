@@ -1,4 +1,4 @@
-import Discord, { CommandInteraction, Interaction } from "discord.js"
+import Discord, { AutocompleteInteraction, CommandInteraction, Interaction } from "discord.js"
 import { YarnGlobals } from "../utils/types"
 
 export interface CommandMeta {
@@ -8,6 +8,7 @@ export interface CommandMeta {
     options?: Discord.ApplicationCommandOptionData[],
     type?: Discord.ApplicationCommandType,
     usage?: string
+    autocomplete?: (interaction: AutocompleteInteraction, client: Discord.Client, globals: object) => any;
 }
 
 export default class Cotton {

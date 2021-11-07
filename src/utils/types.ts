@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import Command from "../classes/Command"
 import Loaders from "../loaders";
+import Log from "../classes/Log";
 
 export interface YarnGlobals {
     prefix?: string;
@@ -9,5 +10,5 @@ export interface YarnGlobals {
     env?: string;
     commands?: Map<string, Command>;
     aliases?: Map<string, string>
-    loader?: Loaders
+    log?: Log;
 }

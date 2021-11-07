@@ -1,8 +1,7 @@
 src/legacy
-.env
-config/conf.json
-
 yarn.lock
 yarn-error.log
-
+.env
+config/conf.json
 node_modules
+data

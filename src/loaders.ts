@@ -4,6 +4,7 @@ import * as Discord from "discord.js";
 import ora, { Ora } from "ora";
 import { YarnGlobals } from "./utils/types"
 import Command from "./classes/Command";
+import Log from "./classes/Log";
 
 /**
  * @classdesc Command & event loader for Yarn
@@ -23,6 +24,8 @@ class Loaders {
      * @param directory Directory of commands (usually "commands")
      */
     loadInteractions = async (directory: string): Promise<Map<string, Command>> => {
+        const log = new Log({ prefix: "InteractionLoader", color: 'blue' })
+
         let interactions: Map<string, Command> = new Map;
         let loaded: number = 0;
         return new Promise((res, rej) => {
@@ -44,21 +47,23 @@ class Loaders {
                         const interaction: { default: Command } = await import(path.join(directory, moduleName))
                         if(!interaction.default.meta.enabled) return "disabled";
                         interactions.set(interaction.default.meta.name, interaction.default);
-                        console.log(`❯ Loaded interaction ${f.name}`);
+                        log.log(`Loaded interaction ${f.name}`);
                     } catch(err) {
-                        console.log(`❯ Error loading interaction ${f.name}!`)
+                        log.log(`Error loading interaction ${f.name}!`)
                         console.log(err)
                     }
                 })
                 res(interactions)
             } catch(err) {
-                console.log("❌ Error loading interactions!")
+                log.log("Error loading interactions!")
                 rej(err)
             }
         })
     }
 
     updateSlashCommands = async (commands: Map<string, Command>): Promise<void> => {
+        const log = new Log({ prefix: "SlashManager", color: 'blue' })
+
         try {
             if (!this.client.application?.owner) await this.client.application?.fetch();
 
@@ -80,9 +85,9 @@ class Loaders {
             } else {
                 await this.client.application?.commands.set(data);
             }
-            console.log(`✔️ Updated ${commands.size} slash commands!`)
+            log.log(`Updated ${commands.size} slash commands!`)
         } catch(err) {
-            console.log("❌ Error updating slash commands! Retrying in 2 seconds")
+            log.log("Error updating slash commands! Retrying in 2 seconds")
             setTimeout(() => this.updateSlashCommands(commands), 2000)
         }
     }
@@ -92,11 +97,12 @@ class Loaders {
      * @param directory Directory of events (usually "events")
      */
     loadEvents = async (directory: string): Promise<void> => {
+        const log = new Log({ prefix: "EventLoader", color: 'blue' })
+        let processed = 0, loaded = 0;
+
         fs.readdir(directory, {withFileTypes: true}, async (err, files: fs.Dirent[]) => {
             if(err) throw err;
-            if(files.length === 0) return console.log(`✔️ No events to load`)
-    
-            let processed = 0, loaded = 0;
+            if(files.length === 0) return log.log(`No events to load`)
 
             files.forEach((f: fs.Dirent) => {
                 let fileExtension = f.name.split(".")[f.name.split(".").length - 1]
@@ -112,16 +118,14 @@ class Loaders {
     
                 import("./" + path.join(relativePath, moduleName))
                     .then((event) => {
-                        loaded++;
+                        loaded += 1;
                         this.client.on(moduleName, (...args) => event.default(...args, this.client, this.globals));
-                        console.log(`❯ Loaded event ${f.name}`);
+                        log.log(`Loaded event ${f.name}`);
                     })
                     .catch((err) => {
-                        console.log(`❯ Error loading event ${f.name}!`)
+                        log.log(`Error loading event ${f.name}!`)
                         console.log(err)
                     })
-
-                if(processed === files.length) console.log(`✔️ ${loaded} events loaded`)
             })
         })
     }
@@ -131,9 +135,11 @@ class Loaders {
     * @param directory Directory of events (usually "events")
     */
     loadJobs = async (directory: string, client: Discord.Client): Promise<void> => {
+        const log = new Log({ prefix: "JobLoader", color: 'blue' })
+
         fs.readdir(directory, {withFileTypes: true}, async (err, files: fs.Dirent[]) => {
             if(err) throw err;
-            if(files.length === 0) return console.log(`✔️ No jobs to load`)
+            if(files.length === 0) return log.log(`No jobs to load`)
     
             let loaded = 0;
 
@@ -150,15 +156,15 @@ class Loaders {
                 import("./" + path.join(relativePath, moduleName))
                     .then((job) => {
                         setInterval(job.run, job.delay, [client])
-                        console.log(`❯ Loaded job ${f.name}`)
+                        log.log(`Loaded job ${f.name}`)
                     })
                     .catch((err) => {
-                        console.log(`❯ Job ${f.name} failed to load!`)
+                        log.log(`Job ${f.name} failed to load!`)
                         console.log(err)
                     })
 
                 loaded++;
-                if(loaded == files.length) console.log(`✔️ ${loaded} jobs loaded`)
+                if(loaded == files.length) log.log(`${loaded} jobs loaded`)
             })
         })
     }

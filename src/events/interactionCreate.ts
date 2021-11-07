@@ -18,9 +18,13 @@ export default (_interaction: Discord.Interaction, client: Discord.Client, globa
       cmd.run(client, interaction, globals)
       break;
       
-    // case "APPLICATION_COMMAND_AUTOCOMPLETE":
-    //   interaction = _interaction as AutocompleteInteraction
-    //   interaction.
+    case "APPLICATION_COMMAND_AUTOCOMPLETE":
+      interaction = _interaction as AutocompleteInteraction
+      let ac_cmd: Cotton = globals.commands.get(interaction.commandName);
+      if(!ac_cmd) return;
+      if(!ac_cmd.meta.enabled) return;
+      if(!ac_cmd.meta.autocomplete) return;
+      ac_cmd.meta.autocomplete(interaction, client, globals)
     
     case "MESSAGE_COMPONENT":
       interaction = _interaction as MessageComponentInteraction
