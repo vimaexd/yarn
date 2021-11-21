@@ -11,7 +11,7 @@ services:
 
   oauth:
     build:
-      context: ./packages/yarn-oauth
+      context: packages/yarn-oauth
       dockerfile: .
     env_file:
     - .env
