@@ -1,10 +1,23 @@
 services:
-  yarn:
+  bot:
     depends_on: 
       - db
-    restart: always
-    volumes:
-      - .:/app
+      - oauth
+    # restart: always
+    env_file:
+    - .env
+    networks:
+    - yarn
+
+  oauth:
+    build:
+      context: ./packages/yarn-oauth
+      dockerfile: .
+    env_file:
+    - .env
+    networks:
+    - yarn
+
 
   db:
     image: postgres
@@ -13,3 +26,8 @@ services:
       - .env
     volumes:
       - ./data/pg:/var/lib/postgresql/data
+    networks:
+      - yarn
+
+networks:
+  yarn:

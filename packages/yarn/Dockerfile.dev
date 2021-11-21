@@ -1,0 +1,5 @@
+FROM node:17-alpine
+
+WORKDIR /app/packages/yarn
+
+CMD ["yarn", "dev"]
