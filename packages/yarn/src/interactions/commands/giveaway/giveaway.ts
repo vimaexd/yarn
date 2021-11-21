@@ -7,7 +7,7 @@ import getGuild from "../../../db/utils/getGuild";
 import { noBtn, deleteBtn } from '../../../utils/buttons';
 
 const Cmd = new Command({
-    enabled: true,
+    enabled: false,
     name: "giveaway",
     description: "Create a giveaway that people can join!",
     options: []
