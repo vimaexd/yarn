@@ -3,6 +3,7 @@ import { reddit } from '../../../utils/apis'
 import Discord, { MessageEmbed, TextChannel } from "discord.js"
 import Command from "../../../classes/Commands/Command"
 import Utils from "../../../classes/Utils";
+import { AxiosError } from "axios";
 
 const utils = new Utils();
 const Cmd = new Command({
@@ -57,6 +58,9 @@ const Cmd = new Command({
       interaction.reply({embeds: [embed]});
     })
     .catch(err => {
+      if(err.isAxiosError && (err.response.data as string).startsWith("<!doctype html>")){
+        return interaction.reply('Error getting posts from reddit! `token_expired`');
+      }
       interaction.reply('Error getting posts from reddit!');
       console.log(err);
     })

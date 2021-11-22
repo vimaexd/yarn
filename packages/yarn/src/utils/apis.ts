@@ -31,6 +31,6 @@ const updateAuth = () => {
     console.log(err);
   })
 
-  setTimeout(updateAuth, timeout || 1800000);
+  setInterval(updateAuth, timeout || 1800000);
 }
 updateAuth();
