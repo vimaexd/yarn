@@ -14,6 +14,6 @@ export default async () => {
     if(!reddit_oauth.data.access_token) throw "No reddit bearer token"
     return `Bearer ${reddit_oauth.data.access_token}`;
   } catch(err) {
-    console.log(err)
+    console.log("Error renewing Reddit token!")
   }
 }

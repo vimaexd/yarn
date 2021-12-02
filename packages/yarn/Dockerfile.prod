@@ -10,6 +10,4 @@ RUN yarn
 # Transpile TypeScript code
 RUN yarn build
 
-
-
 CMD ["yarn", "start"]

@@ -1,23 +1,29 @@
 import fastify from 'fastify';
+import Log from './utils/Log';
 
 import AuthTokenOsu from './services/Osu';
 import AuthTokenReddit from './services/Reddit';
 
-const version = `1.0.0`
-const timeout = 1800000
+const config = {
+  "version": `1.1.0`,
+  "timeout": 1800000
+}
+const log = new Log({prefix: "OAuth", "color": "green"});
 const app = fastify();
 
 let lastUpdated = new Date();
 
+// Services
 let services = new Map<string, string>();
-services.set("timeout", timeout.toString());
+services.set("timeout", config.timeout.toString());
 
+// Renew loop
 const renewTokens = async () => {
   services.set("osu", await AuthTokenOsu());
   services.set("reddit", await AuthTokenReddit());
-  console.log(`${new Date().toString()} Tokens renewed`)
+  log.log(`Tokens renewed`)
+  setTimeout(renewTokens, config.timeout)
 }
-setInterval(renewTokens, timeout)
 renewTokens();
 
 
@@ -32,13 +38,13 @@ app.get('/', async (request, reply) => {
     return "Unauthorized";
   };
 
-  console.log(`Request from ${request.ip} (${request.headers["user-agent"]})`)
+  log.log(`Request from ${request.ip} (${request.headers["user-agent"]})`)
   return Object.fromEntries(services);
 })
 
 const start = async () => {
   try {
-    console.log(`🧶 yarn-oauth v${version}`)
+    console.log(`🧶 yarn-oauth v${config.version}`)
     await app.listen(9090, "0.0.0.0");
   } catch (err) {
     console.log("Error starting server on port 9090!");

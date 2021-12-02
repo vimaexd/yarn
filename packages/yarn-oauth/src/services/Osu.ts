@@ -12,6 +12,6 @@ export default async () => {
     return `Bearer ${osu_oauth.data.access_token}`;
     console.log("Token obtained for Osu")
   } catch(err) {
-    console.log(err)
+    console.log("Error renewing Osu token!")
   }
 }

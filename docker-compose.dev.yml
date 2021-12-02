@@ -10,4 +10,8 @@ services:
       - ./config:/app/config
   oauth:
     ports:
-      - "9090:9090"
+      - 9090:9090
+
+networks:
+  yarn:
+    

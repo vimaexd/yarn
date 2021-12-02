@@ -1,4 +1,4 @@
-import { ShardingManager } from 'discord.js';
+import { Shard, ShardingManager } from 'discord.js';
 import path from 'path';
 import dotenv from 'dotenv';
 import figlet from 'figlet';
@@ -7,6 +7,7 @@ import chalk from 'chalk';
 import worker from 'worker_threads';
 import Log from './classes/Log';
 import Yarn from './classes/Yarn';
+import { YarnShardMessage, YarnShardMessageType } from './utils/types';
 
 let bot: Yarn | undefined;
 dotenv.config({
@@ -30,10 +31,18 @@ if(worker.isMainThread && process.env.SHARD !== "FALSE"){
     }
   );
 
-  shardmanager.on('shardCreate', (shard) => {
+  shardmanager.on('shardCreate', (shard: Shard) => {
     shardlog.log(`Shard ${chalk.bgWhite(shard.id.toString())} spawned`)
+    shard.on('message', (msg: YarnShardMessage) => {
+      switch(msg.t){
+        case YarnShardMessageType.GET_SHARD_ID:
+          shard.worker.postMessage({t: YarnShardMessageType.GET_SHARD_ID, d: shard.id})
+          break;
+      }
+    })
   })
-  shardmanager.spawn();
+
+  shardmanager.spawn({timeout: 60000});
 
 } else {
   bot = new Yarn();

@@ -1,11 +1,13 @@
 import Discord, { Intents } from "discord.js";
 import fs from "fs";
 import path from "path";
+import worker from 'worker_threads';
 
 import { PrismaClient } from '@prisma/client'
-import { YarnGlobals } from "../utils/types"
+import { YarnGlobals, YarnShardMessage } from "../utils/types"
 import Loaders from "./Loaders";
 import Log from "./Log";
+
 
 export default class Yarn {
   private loader: Loaders;
@@ -24,18 +26,41 @@ export default class Yarn {
       )
     ) as any;
 
-
+    // Environment
     (process.env.NODE_ENV === "production") ? this.globals.env = "production" : this.globals.env = "development";
+    
+    worker.parentPort.on('message', (msg: YarnShardMessage) => {
+      switch(msg.t){
+        case 'yarn/getShardId':
+          this.globals.shardId = +msg.d;
+          break;
+      }
+    })
 
     // Client
     this.client = new Discord.Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
-    this.init();
+
+    // Other Globals
+    this.globals.db = new PrismaClient()
+    this.client.shard.send({ t: 'yarn/getShardId' });
+
+    let canStart: NodeJS.Timer;
+    canStart = setInterval(() => {
+      if(this.globals.shardId !== undefined) {
+        this.init();
+        clearInterval(canStart);
+      }
+    }, 1000)
   }
 
   async init(){
-    this.globals.log = new Log({ prefix: "Bot", color: 'magenta' });
-    this.globals.db = new PrismaClient()
     this.loader = new Loaders(this.client, this.globals)
+    this.globals.log = new Log({ prefix: "Bot", color: 'magenta', shardId: this.globals.shardId });
+    this.globals.log.log("Loading Yarn")
+
+    // Load events and jobs
+    await this.loader.loadEvents(path.join(__dirname, '..', 'events'))
+    await this.loader.loadJobs(path.join(__dirname, '..', 'jobs'))
 
     await this.client.login(process.env.AUTH_TOKEN)
     this.client.user.setPresence({
@@ -43,10 +68,6 @@ export default class Yarn {
         {"type": "PLAYING", "name": "🔃 starting up.."}
       ]
     })
-  
-    // Load events and jobs
-    await this.loader.loadEvents(path.join(__dirname, '..', 'events'))
-    await this.loader.loadJobs(path.join(__dirname, '..', 'jobs'))
 
     // Load commands from multiple folders and merge maps
     const dirs = [

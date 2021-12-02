@@ -19,7 +19,7 @@ class Loaders {
   constructor(client: Discord.Client, globals: YarnGlobals) {
     this.client = client;
     this.globals = globals;
-    this.log = new Log({ prefix: "Loaders", color: 'blue' })
+    this.log = new Log({ prefix: "Loaders", color: 'blue', shardId: this.globals.shardId })
   }
 
   /**
@@ -68,7 +68,7 @@ class Loaders {
   }
 
   updateSlashCommands = async (commands: Map<string, Command>): Promise<void> => {
-    const log = new Log({ prefix: "SlashManager", color: 'blue' })
+    const log = new Log({ prefix: "SlashManager", color: 'blue', shardId: this.globals.shardId })
 
     try {
       if (!this.client.application?.owner) await this.client.application?.fetch();

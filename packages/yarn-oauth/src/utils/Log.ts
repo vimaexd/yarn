@@ -4,7 +4,6 @@ import chalk from 'chalk';
 interface LogOptions {
   prefix: string;
   color?: string;
-  shardId?: number;
 }
 
 /**
@@ -19,11 +18,8 @@ export default class Log {
    * @param {string} options.prefix Options object
    * @param {string} color Color
    */
-  constructor({prefix, color = 'blue', shardId}: LogOptions) {
-    let shardPrefix = ''
-    if(shardId !== undefined) shardPrefix = `[SHARD ${shardId.toString()}]` + ' '
-
-    this.prefix = shardPrefix + chalk`{${color}.bold [${prefix}]}`;
+  constructor({prefix, color = 'blue'}: LogOptions) {
+    this.prefix = chalk`{${color}.bold [${prefix}]}`;
   }
 
   /**
