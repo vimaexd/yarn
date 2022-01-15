@@ -1,7 +1,4 @@
 services:
   bot:
-    build:
-      context: .
-      dockerfile: packages/yarn/Dockerfile.prod
     environment:
       - NODE_ENV=production

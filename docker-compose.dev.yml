@@ -1,17 +1,10 @@
 services:
   bot:
-    build:
-      context: packages/yarn
-      dockerfile: ./Dockerfile.dev
     environment:
       - NODE_ENV=development
-    volumes:
-      - ./packages/yarn:/app/packages/yarn
-      - ./config:/app/config
+    # volumes:
+      # - ./packages/yarn:/app/packages/yarn
+      # - ./config:/app/config
   oauth:
     ports:
       - 9090:9090
-
-networks:
-  yarn:
-    

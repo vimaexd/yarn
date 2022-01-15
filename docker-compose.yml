@@ -1,5 +1,8 @@
 services:
   bot:
+    build:
+      context: .
+      dockerfile: packages/yarn/Dockerfile
     depends_on: 
       - db
       - oauth

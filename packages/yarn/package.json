@@ -7,7 +7,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "dev": "yarn && yarn builddb && tsnd --exit-child --respawn --poll --interval 4000 src/index.ts",
+    "dev": "yarn && yarn builddb && tsnd --exit-child src/index.ts --respawn --transpileOnly",
     "start": "yarn builddb && node ./dist/index",
     "builddb": "yarn prisma generate && yarn prisma migrate deploy",
     "build": "tsc"

@@ -94,6 +94,7 @@ class Loaders {
       log.log(`Updated ${commands.size} slash commands!`)
     } catch (err) {
       log.log("Error updating slash commands! Retrying in 2 seconds")
+      console.log(err);
       setTimeout(() => this.updateSlashCommands(commands), 2000)
     }
   }

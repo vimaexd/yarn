@@ -281,11 +281,14 @@ export default async (client: Discord.Client, interaction: Discord.CommandIntera
     if(i.message.interaction.id !== interaction.id) return;
     if(i.user.id !== interaction.user.id) return i.reply({ content: "You can't press that!", ephemeral: true });
 
-
-    await i.update({
-      embeds: [await getEmbed(user, guildUser, i.values[0], interaction)],
-      components: getButtons(user, guildUser, i.values[0], client, perms).concat(row)
-    })
+    try {
+      await i.update({
+        embeds: [await getEmbed(user, guildUser, i.values[0], interaction)],
+        components: getButtons(user, guildUser, i.values[0], client, perms).concat(row)
+      })
+    } catch(err) {
+      // oh no the thing was deleted lmao
+    }
   })
 
   collector.on('end', async interactions => {
