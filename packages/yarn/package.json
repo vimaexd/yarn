@@ -13,6 +13,7 @@
     "build": "tsc"
   },
   "dependencies": {
+    "@prisma/client": "^3.4.0",
     "@types/chalk": "^2.2.0",
     "@types/figlet": "^1.5.4",
     "@types/gradient-string": "^1.1.2",
@@ -20,11 +21,10 @@
     "@types/node": "^16.4.3",
     "@types/node-fetch": "^2.5.7",
     "@types/ws": "^7.4.0",
-    "@prisma/client": "^3.4.0",
     "axios": "^0.21.1",
     "chalk": "^4.1.2",
     "dayjs": "^1.10.4",
-    "discord.js": "^13.3.1",
+    "discord.js": "13.6.0",
     "dotenv": "^8.2.0",
     "figlet": "^1.5.2",
     "gradient-string": "^1.2.0",
