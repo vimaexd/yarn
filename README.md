@@ -1,4 +1,4 @@
-# 🧶 Yarn
+# <img src="https://github.com/etstringy/yarn/blob/master/assets/yarn_transparent.png?raw=true" height="22px"> Yarn
 The multipurpose open-source Discord Bot.
 
 ## Repo packages
