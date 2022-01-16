@@ -1,23 +1,19 @@
 import axios from "axios";
 
-export default {
-  name: "womboart",
-  renew: async () => {
-
-    // this probably rotates, but i havent figured out how to extract it yet
-    const key = "AIzaSyDCvp5MTJLUdtBYEKYWXJrlLzu1zuKM6Xw";
-
-    try {
-      const oauth = await axios.post(
-        `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${key}`, 
-        {
-          "returnSecureToken": true
-        }
-      )
-      if(!oauth.data.idToken) throw "No wombo bearer token"
-      return `Bearer ${oauth.data.idToken}`;
-    } catch(err) {
-      console.log("Error renewing wombo token!")
-    }
+export default async () => {
+  try {
+    const reddit_oauth = await axios.post(
+    "https://www.reddit.com/api/v1/access_token", 
+    "grant_type=client_credentials", 
+    {
+      auth: {
+        username: process.env.REDDIT_CLIENTID,
+        password: process.env.REDDIT_CLIENTSECRET
+      }
+    })
+    if(!reddit_oauth.data.access_token) throw "No reddit bearer token"
+    return `Bearer ${reddit_oauth.data.access_token}`;
+  } catch(err) {
+    console.log("Error renewing Reddit token!")
   }
 }
