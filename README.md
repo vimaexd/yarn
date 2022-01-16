@@ -1,15 +1,19 @@
-# Yarn
-Source for my discord bot named Yarn.
+# 🧶 Yarn
+The multipurpose open-source Discord Bot.
 
-*yes we use the yarn package manager*
+## How to run
+1. Copy **.env.example** to **.env** and fill out the required authentication tokens
+2. Repeat the following steps in each folder in the `packages` folder
+    1. Run `npm install` or `yarn` to install dependencies
+    2. Run `npm run build` and then `npm start` to start
 
 ## How to run (Docker)
+For running in a development environment, use
 ```yaml
-# Production
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-
-# Development
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
 ```
 
-| Run with the `--build` flag when switching between environments|
+For running in a production environment, use
+```yaml
+docker-compose up
+```
