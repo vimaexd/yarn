@@ -5,9 +5,9 @@ COPY ./config /app/config
 WORKDIR /app/packages/yarn
 
 # Install packages
-RUN yarn
+RUN npm i
 
 # Transpile TypeScript code
-RUN yarn build
+RUN npm run build
 
-CMD ["yarn", "start"]
+CMD ["npm", "run", "start"]
