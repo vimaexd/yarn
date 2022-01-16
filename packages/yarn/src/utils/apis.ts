@@ -3,7 +3,7 @@ import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 let interceptors: any = {}
 
 const updateAuth = () => {
-  axios.get('http://oauth:9090/', { headers: { "User-Agent": "yarn/4.0.0" }})
+  axios.get(process.env.OAUTH_SERVER || 'http://oauth:9090/', { headers: { "User-Agent": "yarn/4.0.0" }})
   .then(res => {
     const tokens = res.data;
     if(tokens === {}) return;
