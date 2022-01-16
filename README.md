@@ -1,6 +1,11 @@
 # 🧶 Yarn
 The multipurpose open-source Discord Bot.
 
+## Repo packages
+| Package Name  | Description 
+| -             | -
+| yarn          | Discord bot
+| yarn-oauth    | Provides authorization tokens for services that require OAuth to `yarn` 
 ## How to run
 1. Copy **.env.example** to **.env** and fill out the required authentication tokens
 2. Repeat the following steps in each folder in the `packages` folder
