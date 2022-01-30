@@ -47,13 +47,17 @@ export default new Command({
   **Verification Level**: ${_.capitalize(invite.guild.verificationLevel)}
   **NSFW Level**: ${_.capitalize(invite.guild.nsfwLevel)}
   `)
+  
   embed.addField("Features", invite.guild.features
     .map(f => (
       f.split("_").map(a => (_.capitalize(a))).join(" ")
     ))
     .join(", ") || "None"
   )
-  embed.addField("Assets", guildImages.map(i => `● ${i}`).join("\n"), true)
+
+  if(guildImages.length > 0) 
+    embed.addField("Assets", guildImages.map(i => `● ${i}`).join("\n"), true)
+
   if(code !== invite.guild.vanityURLCode) {
     embed.addField("Invite settings", `
       **Channel**: ${invite.channel.name} (<#${invite.channel.id}>)
