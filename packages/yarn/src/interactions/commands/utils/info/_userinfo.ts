@@ -293,9 +293,13 @@ export default async (client: Discord.Client, interaction: Discord.CommandIntera
 
   collector.on('end', async interactions => {
     select.setDisabled(true)
-    await interaction.editReply({
-      embeds: [await getEmbed(user, guildUser, UserInfoPage.Info, interaction)],
-      components: []
-    })
+    try {
+      await interaction.editReply({
+        embeds: [await getEmbed(user, guildUser, UserInfoPage.Info, interaction)],
+        components: []
+      })
+    } catch {
+      // TODO: implement graceful error handling for deleted messages
+    }
   })
 }
