@@ -65,6 +65,7 @@ const Cmd = new Command({
                 console.log(err)
                 interaction.reply({ephemeral: true, content: ":warning: An error occured while getting that Minecraft Server Status!"})
             }
+        break;
 
         case "player":
             const uuid = await inputToUuid(interaction.options.getString("player"))
@@ -102,7 +103,7 @@ const Cmd = new Command({
                 console.log(err)
                 interaction.reply({ephemeral: true, content: ":warning: An error occured while fetching that player!"})
             }
-
+        break;
     }
 })
 
